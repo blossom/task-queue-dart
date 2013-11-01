@@ -1,6 +1,6 @@
 # Task Queue
 
-A queue to schedule task to run in sequence always waiting for the previous task to be completed.
+A queue to schedule tasks to run in sequence always waiting for the previous task to be completed.
 
 ## Example
 
