@@ -1,0 +1,8 @@
+name: task_queue
+version: 0.0.1
+author: Nikolaus Graf <nik@blossom.io>
+description: A queue to schedule task to run in sequence always waiting for the previous task to be completed.
+environment:
+  sdk: '>=0.8.1'
+dev_dependencies:
+  unittest: '>=0.8.1'
