@@ -6,13 +6,8 @@ import "dart:collection";
 part "src/task_queue_entry.dart";
 
 /*
- * A [Function] returning a [Future]
- */
-typedef Future Task();
-
-/*
- * A collection to schedule [Task]s to run in sequence always waiting for the
- * previous [Task] to be completed.
+ * A collection to schedule tasks to run in sequence always waiting for the
+ * previous task to be completed.
  *
  * Example:
  *
@@ -40,13 +35,13 @@ class TaskQueue {
   Completer _recentActiveCompleter;
 
   /*
-   * Schedules a Task and returns a Future which will complete when the Task
+   * Schedules a task and returns a [Future] which will complete when the task
    * has been finished.
    *
    * The task will be append to the queue and run after every task added before
    * has been executed.
    */
-  Future schedule(Task function, {List positionalArguments,
+  Future schedule(Function function, {List positionalArguments,
     Map<Symbol, dynamic> namedArguments}) {
     var taskEntry = new TaskQueueEntry(function, positionalArguments,
         namedArguments, new Completer());
@@ -84,7 +79,7 @@ class TaskQueue {
   }
 
   /*
-   * Returns true if there is at least one still running [Task] in the queue.
+   * Returns true if there is at least one still running task in the queue.
    */
   bool get isActive {
     if (_recentActiveCompleter == null) {
