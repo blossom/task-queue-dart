@@ -45,11 +45,14 @@ class TaskQueue {
     Map<Symbol, dynamic> namedArguments}) {
     var taskEntry = new TaskQueueEntry(function, positionalArguments,
         namedArguments, new Completer());
+
+    bool listWasEmpty = _tasks.isEmpty;
     _tasks.add(taskEntry);
 
     // Only run the just added task in case the queue hasn't been used yet or
     // the last task has been executed
-    if(!isActive) {
+    if(_recentActiveCompleter == null || _recentActiveCompleter.isCompleted &&
+        listWasEmpty) {
       _runNext();
     }
     return taskEntry.completer.future;
