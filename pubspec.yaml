@@ -1,8 +1,9 @@
 name: task_queue
-version: 0.0.1
+version: 1.0.0
 author: Nikolaus Graf <nik@blossom.io>
 description: A queue to schedule task to run in sequence always waiting for the previous task to be completed.
+homepage: https://github.com/blossom/task-queue-dart
 environment:
-  sdk: '>=0.8.1'
+  sdk: '>=0.8.10+6 <2.0.0'
 dev_dependencies:
-  unittest: '>=0.9.0'
+  unittest: '>=0.9.0 < 0.10.0'
