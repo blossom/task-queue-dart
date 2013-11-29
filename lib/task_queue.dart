@@ -65,8 +65,6 @@ class TaskQueue {
     if (_tasks.isNotEmpty) {
       var taskEntry = _tasks.first;
       _recentActiveCompleter = taskEntry.completer;
-      print('function:');
-      print(taskEntry.function);
       Function.apply(taskEntry.function, taskEntry.positionalArguments,
           taskEntry.namedArguments).then((value) {
         new Future(() {
@@ -75,8 +73,6 @@ class TaskQueue {
         });
         taskEntry.completer.complete(value);
       }).catchError((error) {
-        print('failed:');
-        print(taskEntry.function);
         new Future(() {
           _tasks.removeFirst();
           _runNext();
