@@ -46,7 +46,8 @@ main() {
 
       return future1.then((value) {
         expect(value, 1);
-        expect(queue.isActive, isFalse);
+        // true since there still could be a task in the queue
+        expect(queue.isActive, isTrue);
       });
     });
 
@@ -63,7 +64,7 @@ main() {
 
       Future future1 = queue.schedule(function);
       future1.then((value) {
-        expect(queue.isActive, isFalse);
+        expect(queue.isActive, isTrue);
         Future future2 = queue.schedule(function2);
         expect(future2, completes);
       });
@@ -99,7 +100,7 @@ main() {
 
       future1.then((value) {
         expect(value, 1);
-        expect(function2Started, isTrue);
+        expect(function2Started, isFalse);
         expect(completer2.isCompleted, isFalse);
         expect(function3Started, isFalse);
         expect(completer3.isCompleted, isFalse);
@@ -107,13 +108,16 @@ main() {
 
       future2.then((value) {
         expect(value, 2);
+        expect(completer1.isCompleted, isTrue);
         expect(function2Started, isTrue);
-        expect(function3Started, isTrue);
+        expect(function3Started, isFalse);
         expect(completer3.isCompleted, isFalse);
       });
 
       future3.then((value) {
         expect(value, 3);
+        expect(completer1.isCompleted, isTrue);
+        expect(completer2.isCompleted, isTrue);
       });
 
       expect(future1, completes);

@@ -45,11 +45,14 @@ class TaskQueue {
     Map<Symbol, dynamic> namedArguments}) {
     var taskEntry = new TaskQueueEntry(function, positionalArguments,
         namedArguments, new Completer());
+
+    bool listWasEmpty = _tasks.isEmpty;
     _tasks.add(taskEntry);
 
     // Only run the just added task in case the queue hasn't been used yet or
     // the last task has been executed
-    if(_recentActiveCompleter == null || _recentActiveCompleter.isCompleted) {
+    if(_recentActiveCompleter == null || _recentActiveCompleter.isCompleted &&
+        listWasEmpty) {
       _runNext();
     }
     return taskEntry.completer.future;
@@ -62,17 +65,18 @@ class TaskQueue {
     if (_tasks.isNotEmpty) {
       var taskEntry = _tasks.first;
       _recentActiveCompleter = taskEntry.completer;
-
       Function.apply(taskEntry.function, taskEntry.positionalArguments,
           taskEntry.namedArguments).then((value) {
-        _tasks.removeFirst();
-        // Already start with the next task since the current one is
-        // already done.
-        _runNext();
+        new Future(() {
+          _tasks.removeFirst();
+          _runNext();
+        });
         taskEntry.completer.complete(value);
       }).catchError((error) {
-        _tasks.removeFirst();
-        _runNext();
+        new Future(() {
+          _tasks.removeFirst();
+          _runNext();
+        });
         taskEntry.completer.completeError(error);
       });
     }
