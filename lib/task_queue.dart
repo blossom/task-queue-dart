@@ -49,7 +49,7 @@ class TaskQueue {
 
     // Only run the just added task in case the queue hasn't been used yet or
     // the last task has been executed
-    if(_recentActiveCompleter == null || _recentActiveCompleter.isCompleted) {
+    if(!isActive) {
       _runNext();
     }
     return taskEntry.completer.future;
@@ -62,17 +62,22 @@ class TaskQueue {
     if (_tasks.isNotEmpty) {
       var taskEntry = _tasks.first;
       _recentActiveCompleter = taskEntry.completer;
-
+      print('function:');
+      print(taskEntry.function);
       Function.apply(taskEntry.function, taskEntry.positionalArguments,
           taskEntry.namedArguments).then((value) {
-        _tasks.removeFirst();
-        // Already start with the next task since the current one is
-        // already done.
-        _runNext();
+        new Future(() {
+          _tasks.removeFirst();
+          _runNext();
+        });
         taskEntry.completer.complete(value);
       }).catchError((error) {
-        _tasks.removeFirst();
-        _runNext();
+        print('failed:');
+        print(taskEntry.function);
+        new Future(() {
+          _tasks.removeFirst();
+          _runNext();
+        });
         taskEntry.completer.completeError(error);
       });
     }
