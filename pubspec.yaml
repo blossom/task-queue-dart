@@ -5,4 +5,4 @@ description: A queue to schedule task to run in sequence always waiting for the 
 environment:
   sdk: '>=0.8.1'
 dev_dependencies:
-  unittest: '>=0.8.1'
+  unittest: '>=0.9.0'
